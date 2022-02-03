@@ -1,13 +1,10 @@
-const forms = () => {
-    const form = document.querySelectorAll('form'),
-          inputs = document.querySelectorAll('input'), //для очистки инпутов
-          phoneInputs = document.querySelectorAll('input[name="user_phone"]'); //для валидации
+import checkNumInputs from "./checkNumInputs";
 
-    phoneInputs.forEach(item => { 
-        item.addEventListener('input', () => {
-            item.value = item.value.replace(/\D/, '');
-        });
-    });
+const forms = (state) => {
+    const form = document.querySelectorAll('form'),
+          inputs = document.querySelectorAll('input'); //для очистки инпутов
+
+    checkNumInputs('input[name="user_phone"]');
 
     const message = {
         loading: 'Загрузка...',
@@ -40,6 +37,12 @@ const forms = () => {
             item.append(statusMessage);
             //собираем данные каждой формы в формдату
             const formData = new FormData(item);
+
+            if (item.getAttribute('data-calc') === 'end') {
+                for (let key in state) {
+                    formData.append(key, state[key]);
+                }
+            }
             //если данные нужны в формате json
             // const jsonData = JSON.stringify(Object.fromEntries(formData.entries()));
 
