@@ -1112,8 +1112,6 @@ textarea:focus {
   max-height: 560px;
 }
 
-
-
 /*Media*/
 @media (max-width: 1400px) {
   .main {
