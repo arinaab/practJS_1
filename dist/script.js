@@ -17807,6 +17807,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_tabs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/tabs */ "./src/js/modules/tabs.js");
 /* harmony import */ var _modules_forms__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/forms */ "./src/js/modules/forms.js");
 /* harmony import */ var _modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/changeModalState */ "./src/js/modules/changeModalState.js");
+/* harmony import */ var _modules_timer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/timer */ "./src/js/modules/timer.js");
+
 
 
 
@@ -17818,11 +17820,12 @@ window.addEventListener('DOMContentLoaded', function () {
   var modalState = {}; //состояние нашего модального окна с калькулятором
 
   Object(_modules_changeModalState__WEBPACK_IMPORTED_MODULE_4__["default"])(modalState);
-  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  Object(_modules_modals__WEBPACK_IMPORTED_MODULE_1__["default"])(modalState);
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.glazing_slider', '.glazing_block', '.glazing_content', 'active');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.decoration_slider', '.no_click', '.decoration_content > div > div', 'after_click');
   Object(_modules_tabs__WEBPACK_IMPORTED_MODULE_2__["default"])('.balcon_icons', '.balcon_icons_img', '.big_img > img', 'do_image_more', 'inline-block');
   Object(_modules_forms__WEBPACK_IMPORTED_MODULE_3__["default"])(modalState);
+  Object(_modules_timer__WEBPACK_IMPORTED_MODULE_5__["default"])();
 });
 
 /***/ }),
@@ -17960,6 +17963,11 @@ var forms = function forms(state) {
       inputs = document.querySelectorAll('input'); //для очистки инпутов
 
   Object(_checkNumInputs__WEBPACK_IMPORTED_MODULE_5__["default"])('input[name="user_phone"]');
+
+  var clearState = function clearState() {
+    state = {};
+  };
+
   var message = {
     loading: 'Загрузка...',
     success: 'Спасибо! Мы с Вами свяжемся!',
@@ -18030,6 +18038,10 @@ var forms = function forms(state) {
         setTimeout(function () {
           statusMessage.remove();
         }, 5000);
+        setTimeout(function () {
+          document.querySelector('.popup_calc_end').style.display = 'none';
+        }, 5000);
+        clearState();
       });
     });
   });
@@ -18052,7 +18064,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_web_dom_collections_for_each__WEBPACK_IMPORTED_MODULE_0__);
 
 
-var modals = function modals() {
+var modals = function modals(state) {
   function bindModal(triggerSelector, modalSelector, closeSelector) {
     var closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     var trigger = document.querySelectorAll(triggerSelector),
@@ -18162,6 +18174,74 @@ var tabs = function tabs(headerSelector, tabSelector, contentSelector, activeCla
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (tabs);
+
+/***/ }),
+
+/***/ "./src/js/modules/timer.js":
+/*!*********************************!*\
+  !*** ./src/js/modules/timer.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+var timer = function timer() {
+  var getTime = function getTime(endtime) {
+    var t = Date.parse(endtime) - Date.parse(new Date()),
+        days = Math.floor(t / (1000 * 60 * 60 * 24)),
+        hours = Math.floor(t / (1000 * 60 * 60) % 24),
+        minutes = Math.floor(t / 1000 / 60 % 60),
+        seconds = Math.floor(t / 1000 % 60);
+    return {
+      t: t,
+      days: days,
+      hours: hours,
+      minutes: minutes,
+      seconds: seconds
+    };
+  };
+
+  var addZero = function addZero(num) {
+    if (num >= 0 && num < 10) {
+      return "0".concat(num);
+    } else {
+      return num;
+    }
+  };
+
+  var setClock = function setClock(daysSelector, hoursSelector, minSelector, secSelector, endtime) {
+    var days = document.querySelector(daysSelector),
+        hours = document.querySelector(hoursSelector),
+        minutes = document.querySelector(minSelector),
+        seconds = document.querySelector(secSelector);
+    updateClock();
+
+    function updateClock() {
+      var obj = getTime(endtime);
+      days.textContent = addZero(obj.days);
+      hours.textContent = addZero(obj.hours);
+      minutes.textContent = addZero(obj.minutes);
+      seconds.textContent = addZero(obj.seconds);
+      var time = setInterval(function () {
+        updateClock();
+      }, 1000);
+
+      if (obj.t <= 0) {
+        clearInterval(time);
+        days.textContent = '00';
+        hours.textContent = '00';
+        minutes.textContent = '00';
+        seconds.textContent = '00';
+        document.querySelector('.timer1 h4').textContent = 'Акция закончилась!';
+      }
+    }
+  };
+
+  setClock('#days', '#hours', '#minutes', '#seconds', '2022-03-24');
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (timer);
 
 /***/ }),
 

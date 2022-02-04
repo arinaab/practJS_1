@@ -6,6 +6,10 @@ const forms = (state) => {
 
     checkNumInputs('input[name="user_phone"]');
 
+    const clearState = () => {
+        state = {};
+    };
+
     const message = {
         loading: 'Загрузка...',
         success: 'Спасибо! Мы с Вами свяжемся!',
@@ -57,6 +61,10 @@ const forms = (state) => {
                     setTimeout( () => {
                         statusMessage.remove();
                     }, 5000);
+                    setTimeout( () => {
+                        document.querySelector('.popup_calc_end').style.display = 'none';
+                    }, 5000);
+                    clearState();
                 });
         });
     });
